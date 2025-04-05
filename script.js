@@ -1,4 +1,4 @@
-// createUserName =================================================================================================================
+// createUserName  — для створення користувача =================================================================================================================
 async function createUserName () {
   let data = null
   try {
@@ -20,12 +20,13 @@ async function createUserName () {
   console.log("createUserName: ", data);
 
   localStorage.setItem("FD_ID", `${data.id}`);
+  FD_ID = localStorage.getItem("FD_ID");
 
   inp1.placeholder = "Введіть текст";
   inp1.value = "";
 }
 
-// POST_MSG =================================================================================================================
+// POST_MSG — для надсилання повідомлень =================================================================================================================
 async function POST_MSG () {
   let data = null;
   try {
@@ -47,18 +48,16 @@ async function POST_MSG () {
 
   console.log("POST_MSG: ", data);
 
-  localStorage.setItem("LAST_MSG", `${data.msg}`);
-  localStorage.setItem("LAST_ID_MSG", `${data.id}`);
-  localStorage.setItem("LAST_DATE_MSG", `${data.date}`);
-
   inp1.value = "";
+
+  return data;
 }
 
-// GET_LAST_MSG =================================================================================================================
+// GET_LAST_MSG — для отримання повідомлень =================================================================================================================
 async function GET_LAST_MSG () {
   let data = null;
   try {
-    const response = await fetch("http://127.0.0.1:5173/msg", {method: "GET"});
+    let response = await fetch("http://127.0.0.1:5173/msg", {method: "GET"});
 
     if (!response.ok) {
       throw new Error(`CODE ERROR: ${response.status}`);
@@ -71,7 +70,7 @@ async function GET_LAST_MSG () {
 
   console.log("GET_LAST_MSG: ", data);
   
-  const all_msg = data.map((data) => ({
+  let all_msg = data.map((data) => ({
     username: data.user.username,
     msg_id: data.id,
     msg: data.msg,
@@ -83,12 +82,11 @@ async function GET_LAST_MSG () {
   return all_msg;
 };
 
-// GET_USER =================================================================================================================
-
+// GET_USER — для отримання користувача =================================================================================================================
 async function GET_USER () {
   let data = null;
   try {
-    const response = await fetch(`http://127.0.0.1:5173/user/${localStorage.getItem("FD_ID")}`, {method: "GET"});
+    let response = await fetch(`http://127.0.0.1:5173/user/${localStorage.getItem("FD_ID")}`, {method: "GET"});
 
     if (!response.ok) {
       throw new Error(`CODE ERROR: ${response.status}`);
@@ -102,8 +100,25 @@ async function GET_USER () {
   console.log("GET_USER: ", data);
 
   inp1.value = "";
+  
+  return data;
 };
 
+// login =====================================================
+let isLogged = null;
+let FD_ID = localStorage.getItem("FD_ID") || null;
+
+async function login () {
+  let data = await GET_USER();
+
+  if (data.code) {
+    return false;
+  } else {
+      return true;
+  }
+};
+
+!localStorage.getItem("FD_ID") ? inp1.placeholder = "Введіть свій nickname" : isLogged = true;
 
 // input =====================================================
 const inp1 = document.querySelector(".inp");
@@ -114,14 +129,16 @@ inp1.addEventListener("input", (event) => {
 });
 
 // button =====================================================
-let div1 = document.querySelector(".div1");
+const div1 = document.querySelector(".div1");
 
 div1.addEventListener("click", async () => {
-  // createUserName();
-  //
-  //
-  //
-  //
+  if (!isLogged) {
+    await createUserName();
+    console.log("Створене ID: ", FD_ID);
+    return isLogged = true;
+  } 
+  await POST_MSG();
 });
 
-let FD_ID = localStorage.getItem("FD_ID");
+// Повернути константи назад
+// Перемістити перевірку входу в акаунт 
