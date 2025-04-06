@@ -17,48 +17,83 @@ body {
   justify-content: center;
   flex-direction: column;
   gap: 20px;
+
 }
 
 .div2 {
   background-color: rgb(198, 201, 214);
-  width: 90%;
-  height: 60%;
+  width: 1000px;
+  height: 600px;
   padding: 20px 40px 20px 40px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 40px;
   border-radius: 8px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
-/* .message_style {
+.message-style {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(194, 194, 194);  
+  width: 100%;
+  font-size: 26px;
+}
+
+.username {
+  width: fit-content;
+  background-color: rgb(119, 118, 116);
+  padding: 0px 10px 0px 10px;
+}
+
+.message {
+  width: 100%;
+  padding: 10px 30px;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: start;
+  background-color: rgb(177, 176, 175);
   
-} */
+}
+
+.date-div {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.date {
+  background-color: rgb(119, 118, 116);
+  padding: 0px 10px;
+}
+
+.input-section {
+ display: flex;
+ gap: 20px; 
+  font-size: 26px;
+}
 
 .inp {
-  width: 900px;
-  height: 80px;
+  width: 790px;
+  height: 60px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 60px;
   background-color: rgba(109, 109, 109, 0.418);
   color: white;
   border: none;
   outline: none;
   border-radius: 8px;
   text-align: center;
+  font-size: 26px;
 }
 
 .div1 {
-  width: 200px;
-  height: 100px;
+  width: 190px;
+  height: 60px;
   background-color: rgb(42, 42, 73);
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 30px;
   color: white;
   border-radius: 8px;
 

@@ -57,7 +57,7 @@ async function POST_MSG () {
 async function GET_LAST_MSG () {
   let data = null;
   try {
-    let response = await fetch("http://127.0.0.1:5173/msg", {method: "GET"});
+    const response = await fetch("http://127.0.0.1:5173/msg", {method: "GET"});
 
     if (!response.ok) {
       throw new Error(`CODE ERROR: ${response.status}`);
@@ -70,7 +70,7 @@ async function GET_LAST_MSG () {
 
   console.log("GET_LAST_MSG: ", data);
   
-  let all_msg = data.map((data) => ({
+  const all_msg = data.map((data) => ({
     username: data.user.username,
     msg_id: data.id,
     msg: data.msg,
@@ -86,7 +86,7 @@ async function GET_LAST_MSG () {
 async function GET_USER () {
   let data = null;
   try {
-    let response = await fetch(`http://127.0.0.1:5173/user/${localStorage.getItem("FD_ID")}`, {method: "GET"});
+    const response = await fetch(`http://127.0.0.1:5173/user/${localStorage.getItem("FD_ID")}`, {method: "GET"});
 
     if (!response.ok) {
       throw new Error(`CODE ERROR: ${response.status}`);
@@ -104,22 +104,6 @@ async function GET_USER () {
   return data;
 };
 
-// login =====================================================
-let isLogged = null;
-let FD_ID = localStorage.getItem("FD_ID") || null;
-
-async function login () {
-  let data = await GET_USER();
-
-  if (data.code) {
-    return false;
-  } else {
-      return true;
-  }
-};
-
-!localStorage.getItem("FD_ID") ? inp1.placeholder = "Введіть свій nickname" : isLogged = true;
-
 // input =====================================================
 const inp1 = document.querySelector(".inp");
 
@@ -128,17 +112,51 @@ inp1.addEventListener("input", (event) => {
   inpText = event.target.value;
 });
 
+// login =====================================================
+let isLogged = null;
+let FD_ID = localStorage.getItem("FD_ID") || null;
+
+!localStorage.getItem("FD_ID") ? inp1.placeholder = "Введіть свій nickname" : isLogged = true;
+
 // button =====================================================
 const div1 = document.querySelector(".div1");
 
-div1.addEventListener("click", async () => {
-  if (!isLogged) {
-    await createUserName();
-    console.log("Створене ID: ", FD_ID);
-    return isLogged = true;
-  } 
-  await POST_MSG();
-});
+(async function () {
+  div1.addEventListener("click", async () => {
+    if (!isLogged) {
+      await createUserName();
+      console.log("Створене ID: ", FD_ID);
+      isLogged = true;
+      return;
+    } 
+    await POST_MSG();
+  });
 
-// Повернути константи назад
-// Перемістити перевірку входу в акаунт 
+  inp1.addEventListener("keyup", async (event) => {
+    if (event.key === "Enter") {
+      if (!isLogged) {
+        await createUserName();
+        console.log("Створене ID: ", FD_ID);
+        isLogged = true;
+        return;
+      } 
+      await POST_MSG();
+    }
+  });
+})();
+
+
+
+
+// history msg =====================================================
+let history = "";
+// setInterval(() => history = GET_LAST_MSG(), 5000);
+
+// history.forEach(objectMsg => {
+  
+// });
+
+
+//Попрацювати з кольорами
+//Автоматичне створення блоків
+
