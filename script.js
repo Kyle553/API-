@@ -69,17 +69,10 @@ async function GET_LAST_MSG () {
   }
 
   console.log("GET_LAST_MSG: ", data);
-  
-  const all_msg = data.map((data) => ({
-    username: data.user.username,
-    msg_id: data.id,
-    msg: data.msg,
-    date: data.date
-  }));
 
   inp1.value = "";
 
-  return all_msg;
+  return data;
 };
 
 // GET_USER — для отримання користувача =================================================================================================================
@@ -149,14 +142,73 @@ const div1 = document.querySelector(".div1");
 
 
 // history msg =====================================================
-let history = "";
-// setInterval(() => history = GET_LAST_MSG(), 5000);
+let history = null;
 
-// history.forEach(objectMsg => {
+// setTimeout(async () => {
+//   history = await GET_LAST_MSG();
+//   messages();
+// }, 5000);
+
+function messages () {
+  history.forEach(objectMsg => {
+    if (objectMsg.user.id === FD_ID) {
+      const div1 = document.querySelector(".right");
+      div1.classList.add("right")
+      
+      const div2 = document.createElement("div");
+      div2.classList.add("message-style", "message-style-right")
+      div1.appendChild(div2);
+      
+      const div3 = document.createElement("div");
+      div3.classList.add("username", "username-right");
+      div3.textContent = `${objectMsg.user.username}`
+      div2.appendChild(div3);
   
-// });
+      const div4 = document.createElement("div");
+      div4.classList.add("message", "message-right");
+      div4.textContent = `${objectMsg.msg}`
+      div2.appendChild(div4);
+  
+      const div5 = document.createElement("div");
+      div5.classList.add("date", "date-right")
+      const timestamp = `${objectMsg.date}`;
+      const date = new Date(Number(timestamp));
+      const dateTime = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+      div5.textContent = `${dateTime}`;
+      div2.appendChild(div5);
 
+      
+      document.querySelector(".div2").append(div1);
+    } else {
+        const div1 = document.querySelector(".left");
+        div1.classList.add("left")
+  
+        const div2 = document.createElement("div");
+        div2.classList.add("message-style", "message-style-left")
+        div1.appendChild(div2);
+  
+        const div3 = document.createElement("div");
+        div3.classList.add("username", "username-left");
+        div3.textContent = `${objectMsg.user.username}`
+        div2.appendChild(div3);
+  
+        const div4 = document.createElement("div");
+        div4.classList.add("message", "message-left");
+        div4.textContent = `${objectMsg.msg}`
+        div2.appendChild(div4);
+  
+        const div5 = document.createElement("div");
+        div5.classList.add("date", "date-left")
+        const timestamp = `${objectMsg.date}`;
+        const date = new Date(Number(timestamp));
+        const dateTime = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        div5.textContent = `${dateTime}`;
+        div2.appendChild(div5);
+        
+        document.querySelector(".div2").append(div1);
+    }
+  });
+}
 
-//Попрацювати з кольорами
-//Автоматичне створення блоків
-
+// Розмір повідомлення за вмістом
+// Перевірка на повторні повідомлення по msg id
