@@ -70,8 +70,6 @@ async function GET_LAST_MSG () {
 
   console.log("GET_LAST_MSG: ", data);
 
-  inp1.value = "";
-
   return data;
 };
 
@@ -138,77 +136,78 @@ const div1 = document.querySelector(".div1");
   });
 })();
 
-
-
-
 // history msg =====================================================
 let history = null;
+let msg_id = [];
 
-// setTimeout(async () => {
-//   history = await GET_LAST_MSG();
-//   messages();
-// }, 5000);
+setInterval(async () => {
+  history = await GET_LAST_MSG();
+  
+  messages();
+}, 5000);
 
 function messages () {
-  history.forEach(objectMsg => {
-    if (objectMsg.user.id === FD_ID) {
-      const div1 = document.querySelector(".right");
-      div1.classList.add("right")
+  history.reverse().forEach(objectMsg => {
+    if (!msg_id.includes(objectMsg.id)) {
+      msg_id.push(objectMsg.id); 
       
-      const div2 = document.createElement("div");
-      div2.classList.add("message-style", "message-style-right")
-      div1.appendChild(div2);
+      const zero = (num) => num < 10 ? `0${num}` : num;
       
-      const div3 = document.createElement("div");
-      div3.classList.add("username", "username-right");
-      div3.textContent = `${objectMsg.user.username}`
-      div2.appendChild(div3);
-  
-      const div4 = document.createElement("div");
-      div4.classList.add("message", "message-right");
-      div4.textContent = `${objectMsg.msg}`
-      div2.appendChild(div4);
-  
-      const div5 = document.createElement("div");
-      div5.classList.add("date", "date-right")
-      const timestamp = `${objectMsg.date}`;
-      const date = new Date(Number(timestamp));
-      const dateTime = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-      div5.textContent = `${dateTime}`;
-      div2.appendChild(div5);
-
-      
-      document.querySelector(".div2").append(div1);
-    } else {
-        const div1 = document.querySelector(".left");
-        div1.classList.add("left")
-  
+      if (objectMsg.user.id === FD_ID) {
+        const div1 = document.createElement("div");
+        div1.classList.add("right")
+        
         const div2 = document.createElement("div");
-        div2.classList.add("message-style", "message-style-left")
+        div2.classList.add("message-style", "message-style-right")
         div1.appendChild(div2);
-  
+        
         const div3 = document.createElement("div");
-        div3.classList.add("username", "username-left");
+        div3.classList.add("username", "username-right");
         div3.textContent = `${objectMsg.user.username}`
         div2.appendChild(div3);
-  
+        
         const div4 = document.createElement("div");
-        div4.classList.add("message", "message-left");
+        div4.classList.add("message", "message-right");
         div4.textContent = `${objectMsg.msg}`
         div2.appendChild(div4);
-  
+        
         const div5 = document.createElement("div");
-        div5.classList.add("date", "date-left")
+        div5.classList.add("date", "date-right")
         const timestamp = `${objectMsg.date}`;
         const date = new Date(Number(timestamp));
-        const dateTime = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        const dateTime = `${zero(date.getDate())}.${zero(date.getMonth() + 1)}.${date.getFullYear()} || ${zero(date.getHours())}:${zero(date.getMinutes())}:${zero(date.getSeconds())}`;
         div5.textContent = `${dateTime}`;
         div2.appendChild(div5);
         
         document.querySelector(".div2").append(div1);
+      } else {
+        const div1 = document.createElement("div");
+        div1.classList.add("left")
+        
+        const div2 = document.createElement("div");
+        div2.classList.add("message-style", "message-style-left")
+        div1.appendChild(div2);
+        
+        const div3 = document.createElement("div");
+        div3.classList.add("username", "username-left");
+        div3.textContent = `${objectMsg.user.username}`
+        div2.appendChild(div3);
+        
+        const div4 = document.createElement("div");
+        div4.classList.add("message", "message-left");
+        div4.textContent = `${objectMsg.msg}`
+        div2.appendChild(div4);
+        
+        const div5 = document.createElement("div");
+        div5.classList.add("date", "date-left")
+        const timestamp = `${objectMsg.date}`;
+        const date = new Date(Number(timestamp));
+        const dateTime = `${zero(date.getDate())}.${zero(date.getMonth() + 1)}.${date.getFullYear()} || ${zero(date.getHours())}:${zero(date.getMinutes())}:${zero(date.getSeconds())}`;
+        div5.textContent = `${dateTime}`;
+        div2.appendChild(div5);
+        
+        document.querySelector(".div2").append(div1);
+      }
     }
   });
-}
-
-// Розмір повідомлення за вмістом
-// Перевірка на повторні повідомлення по msg id
+};
