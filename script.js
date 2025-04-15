@@ -89,8 +89,6 @@ async function GET_USER () {
   }
 
   console.log("GET_USER: ", data);
-
-  inp1.value = "";
   
   return data;
 };
@@ -112,8 +110,18 @@ let FD_ID = localStorage.getItem("FD_ID") || null;
 // button =====================================================
 const div1 = document.querySelector(".div1");
 
-(async function () {
-  div1.addEventListener("click", async () => {
+div1.addEventListener("click", async () => {
+  if (!isLogged) {
+    await createUserName();
+    console.log("Створене ID: ", FD_ID);
+    isLogged = true;
+    return;
+  } 
+  await POST_MSG();
+});
+
+inp1.addEventListener("keyup", async (event) => {
+  if (event.key === "Enter") {
     if (!isLogged) {
       await createUserName();
       console.log("Створене ID: ", FD_ID);
@@ -121,22 +129,11 @@ const div1 = document.querySelector(".div1");
       return;
     } 
     await POST_MSG();
-  });
-
-  inp1.addEventListener("keyup", async (event) => {
-    if (event.key === "Enter") {
-      if (!isLogged) {
-        await createUserName();
-        console.log("Створене ID: ", FD_ID);
-        isLogged = true;
-        return;
-      } 
-      await POST_MSG();
-    }
-  });
-})();
+  }
+});
 
 // history msg =====================================================
+const DOMdiv2 = document.querySelector(".div2");
 let history = null;
 let msg_id = [];
 
@@ -152,7 +149,7 @@ function messages () {
       msg_id.push(objectMsg.id); 
       
       const zero = (num) => num < 10 ? `0${num}` : num;
-      
+
       if (objectMsg.user.id === FD_ID) {
         const div1 = document.createElement("div");
         div1.classList.add("right")
@@ -179,7 +176,9 @@ function messages () {
         div5.textContent = `${dateTime}`;
         div2.appendChild(div5);
         
-        document.querySelector(".div2").append(div1);
+        DOMdiv2.append(div1);
+
+        DOMdiv2.scrollTop = DOMdiv2.scrollHeight;
       } else {
         const div1 = document.createElement("div");
         div1.classList.add("left")
@@ -206,8 +205,13 @@ function messages () {
         div5.textContent = `${dateTime}`;
         div2.appendChild(div5);
         
-        document.querySelector(".div2").append(div1);
+        DOMdiv2.append(div1);
+
+        DOMdiv2.scrollTop = DOMdiv2.scrollHeight;
       }
     }
   });
 };
+
+// Зробити нормальний неймінг
+// Прибрати копіювання коду
